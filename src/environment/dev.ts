@@ -1,8 +1,8 @@
 
 
 export const environment ={
-    nameBd: "chat_admin",
-    urlBd: "mongodb://localhost/",
+    nameBd: "test",
+    urlBd: "mongodb://mongo:pOkGu6AFCpZkqirigmJ1@containers-us-west-32.railway.app:7265/",
     userBd: "",
     contraBD: "",
     MULTI_DEVICE: "true",
