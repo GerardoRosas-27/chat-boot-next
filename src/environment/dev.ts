@@ -5,5 +5,6 @@ export const environment ={
     urlBd: "mongodb://localhost/",
     userBd: "",
     contraBD: "",
-    MULTI_DEVICE: "true"
+    MULTI_DEVICE: "true",
+    url: "https://chat-boot-next-production.up.railway.app/"
 }

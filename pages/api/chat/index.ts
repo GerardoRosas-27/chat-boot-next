@@ -27,7 +27,7 @@ export default async function chat(
     res: NextApiResponse<ResponseChat>
 ) {
     (fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
-    res.redirect("http://localhost:3000/");
+    res.redirect(environment.url);
 }
 
 
