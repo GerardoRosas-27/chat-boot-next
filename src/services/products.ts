@@ -1,32 +1,32 @@
-import { productsDTO } from "../interfaces/products";
+import { productsModel } from "../models/products";
+import { createProducts, searchProductByID, searchProducts, removeProduct, updateProduct } from "./bd.service";
 
-export function getProduct(id?: string): productsDTO[] {
-    if (id) {
-        return dataDumi().filter(item => item._id === id);
+export async function postProduct(data: productsModel): Promise<productsModel> {
+    let response = await createProducts(data);
+    console.log("service product: ", response);
+    return response
+}
+
+export async function getProducts(): Promise<productsModel[]> {
+    let response = await searchProducts();
+    return response
+}
+
+export async function getProduct(id: string): Promise<productsModel> {
+    let response = await searchProductByID(id);
+    return response
+}
+export async function deleteProduct(id: string): Promise<productsModel> {
+    let response = await removeProduct(id);
+    return response
+}
+export async function putProduct(id: string, data: productsModel): Promise<productsModel | null> {
+    let response = await updateProduct(id, data);
+    console.log("update result:", response);
+    if (response.modifiedCount === 1) {
+        return { _id: id, ...data }
     } else {
-        return []
+        return null
     }
 }
 
-export function getProducts(): productsDTO[] {
-    return dataDumi();
-}
-
-function dataDumi() {
-    return [
-        {
-            _id: "123",
-            name: "portafolio",
-            category: "Portafolio",
-            description: "Portafolio de mesclilla de niño",
-            propertis: [{ size: "mediano", price: 50.00 }]
-        },
-        {
-            _id: "234sdf",
-            name: "portafolio",
-            category: "Portafolio",
-            description: "Portafolio de mesclilla de niño",
-            propertis: [{ size: "mediano", price: 50.00 }]
-        }
-    ]
-}

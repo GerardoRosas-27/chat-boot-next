@@ -1,11 +1,12 @@
 export interface productsDTO {
-    _id?: string; 
+    id?: string; 
     name: string;
     category: string;
     description: string;
-    propertis: propertis[];
+    propertis: propertisDTO[];
 }
-export interface propertis {
+export interface propertisDTO {
+    id?: string;
     size: string; 
     price: number;
 }
