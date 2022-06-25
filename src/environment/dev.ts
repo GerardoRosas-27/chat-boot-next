@@ -1,7 +1,7 @@
 
 
 export const environment ={
-    nameBd: "test",
+    nameBd: "chat_boot",
     urlBd: "mongodb://mongo:pOkGu6AFCpZkqirigmJ1@containers-us-west-32.railway.app:7265/",
     userBd: "",
     contraBD: "",
