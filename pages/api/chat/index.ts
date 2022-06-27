@@ -6,8 +6,11 @@ require('dotenv').config()
 const fs = require('fs');
 import { createClient, isValidNumber, generateImage } from '../../../src/chat_boot/controllers/handle';
 import { connectionReady, connectionLost } from '../../../src/chat_boot/controllers/connection'
+import { getInitials, getResponse } from '../../../src/services/chatbot';
+import { responseModel } from '../../../src/models/chatbot';
+import { keyChatBot } from '../../../src/environment/constan';
 
-const MULTI_DEVICE = environment.MULTI_DEVICE || 'true';
+const MULTI_DEVICE = environment.MULTI_DEVICE;
 const SESSION_FILE_PATH = './session.json';
 
 let client = new Client();
@@ -26,7 +29,7 @@ export default async function chat(
     req: NextApiRequest,
     res: NextApiResponse<ResponseChat>
 ) {
-    (fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === 'false') ? withSession() : withOutSession();
+    (fs.existsSync(SESSION_FILE_PATH) && MULTI_DEVICE === false) ? withSession() : withOutSession();
     res.redirect(environment.url);
 }
 
@@ -81,7 +84,9 @@ const withOutSession = () => {
     });
 
     client.on('authenticated', (session: any) => {
+
         sessionData = session;
+        console.log("entro authenticated: ", sessionData);
         if (sessionData) {
             fs.writeFile(SESSION_FILE_PATH, JSON.stringify(session), function (err: any) {
                 if (err) {
@@ -98,17 +103,68 @@ async function listenMessage() {
     client.on('message', async (msg: any) => {
         console.log('Body Message: ', msg.body);
         const { from, body, hasMedia } = msg;
-        if (msg.body === 'hola' || 'Hola') {
-
-            if (isValidNumber(from)) {
-                if (body === '1') {
-                    client.sendMessage(msg.from, 'menu de opciones 1');
-                } else {
-                    client.sendMessage(msg.from, 'mensaje nuevo');
-                }
-            }
-
+        if (!isValidNumber(from)) {
+            return
         }
+        if (from === 'status@broadcast') {
+            return
+        }
+        let message = body.toLowerCase();
+
+        let step = await getMessages(message);
+        if (step) {
+            console.log("entro step: ", step)
+            let response = await responseMessages(step);
+            console.log("responseMessages: ", response)
+            client.sendMessage(from, response.replyMessage);
+        } else {
+            console.log("entro sendMessaeDefault: ", step)
+            sendMessaeDefault(client, from);
+           
+        }
+
+
     });
 }
+
+async function getMessages(message: string) {
+    let stepsInitial = await getInitials();
+    console.log("searchs stepsInitial: ", stepsInitial);
+    const { key } = stepsInitial.find(k => k.keywords.includes(message)) || { key: null }
+    const response = key || null;
+    return response
+}
+
+async function responseMessages(step: string) {
+    let response = await getResponse(step);
+    let dataResponse = {
+        id: response[0]._id,
+        key: response[0].key,
+        replyMessage: response[0].replyMessage.join(''),
+        media: response[0].media,
+        trigger: response[0].trigger
+    }
+    return dataResponse
+}
+
+async function sendMessaeDefault(client: any, from: string) {
+    let response = await responseMessages(keyChatBot.DEFAULT);
+    client.sendMessage(from, response.replyMessage);
+}
+
+async function sendButtons(client: any, from: string) {
+
+    let buttons  = [
+        { "body": "Cursos" },
+        { "body": "Youtube" },
+        { "body": "Telegram" }
+    ]
+
+    let button = new Buttons("mensaje bootones", [...buttons], "titulo B", "footer B");
+    let response = await client.sendMessage(from, button);
+    console.log("botton: ", response);
+
+}
+
+
 

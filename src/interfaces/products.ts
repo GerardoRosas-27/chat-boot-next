@@ -4,6 +4,7 @@ export interface productsDTO {
     category: string;
     description: string;
     propertis: propertisDTO[];
+    img: string;
 }
 export interface propertisDTO {
     id?: string;

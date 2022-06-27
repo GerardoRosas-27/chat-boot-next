@@ -10,8 +10,9 @@ var propsSchema = new Schema<propertisModel>({
 
 const productsSchema = new Schema<productsModel>({
   data_name: { type: String, required: true },
-  category: { type: String, required: true },
-  description: { type: String, required: true },
-  propertis: [propsSchema]
+  category: { type: String, required: false },
+  description: { type: String, required: false },
+  propertis: [propsSchema],
+  img: { type: String, required: true }
 });
-export const Products = mongoose.models.Products || model<productsModel>("Products", productsSchema);
+export const Products = mongoose.models.products || model<productsModel>("products", productsSchema);

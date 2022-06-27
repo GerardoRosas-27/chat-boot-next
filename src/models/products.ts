@@ -7,6 +7,7 @@ export interface productsModel {
     category: string;
     description: string;
     propertis: propertisModel[];
+    img: string;
 }
 export interface propertisModel {
     _id?: string

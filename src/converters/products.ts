@@ -11,7 +11,8 @@ export function EntityProductsToProductDTO(data: productsModel): productsDTO {
         name: data.data_name,
         category: data.category,
         description: data.description,
-        propertis: data.propertis.map(item => EntityPropsProductsToPropsProductsDTO(item))
+        propertis: data.propertis.map(item => EntityPropsProductsToPropsProductsDTO(item)),
+        img: data.img
     }
 }
 export function EntityPropsProductsToPropsProductsDTO(data: propertisModel): propertisDTO {
@@ -26,7 +27,8 @@ export function ProductDTOToEntityProducts(data: productsDTO): productsModel {
         data_name: data.name,
         category: data.category,
         description: data.description,
-        propertis: data.propertis.map(item => PropsProductsDTOToEntityPropsProducts(item))
+        propertis: data.propertis.map(item => PropsProductsDTOToEntityPropsProducts(item)),
+        img: data.img
     }
 }
 export function PropsProductsDTOToEntityPropsProducts(data: propertisDTO): propertisModel {
