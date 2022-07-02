@@ -7,5 +7,6 @@ export const environment ={
     contraBD: "",
     MULTI_DEVICE: false,
     url: "http://localhost:3000/",
-    url_0: "https://chat-boot-next-production.up.railway.app/"
+    url_0: "https://chat-boot-next-production.up.railway.app/",
+    urImg:"./public/chat_boot"
 }

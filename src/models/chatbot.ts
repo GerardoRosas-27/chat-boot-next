@@ -6,8 +6,13 @@ export interface initialModel{
 
 export interface responseModel{
     _id?: string
-    key: string;
+    key?: string;
     replyMessage: string[];
     media?: string;
     trigger?: string;
+}
+
+export interface responseMessageProduct{
+    replyMessage: string;
+    media: string;
 }

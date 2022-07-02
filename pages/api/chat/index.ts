@@ -1,14 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { environment } from '../../../src/environment/dev';
 const qrcode = require('qrcode-terminal');
-const { Client, Buttons } = require('whatsapp-web.js');
+const { Client, Buttons, MessageMedia } = require('whatsapp-web.js');
 require('dotenv').config()
 const fs = require('fs');
 import { createClient, isValidNumber, generateImage } from '../../../src/chat_boot/controllers/handle';
 import { connectionReady, connectionLost } from '../../../src/chat_boot/controllers/connection'
 import { getInitials, getResponse } from '../../../src/services/chatbot';
-import { responseModel } from '../../../src/models/chatbot';
+import { responseMessageProduct, responseModel } from '../../../src/models/chatbot';
 import { keyChatBot } from '../../../src/environment/constan';
+import { getProducts } from '../../../src/services/products';
+import { propertisModel } from '../../../src/models/products';
 
 const MULTI_DEVICE = environment.MULTI_DEVICE;
 const SESSION_FILE_PATH = './session.json';
@@ -16,10 +18,8 @@ const SESSION_FILE_PATH = './session.json';
 let client = new Client();
 let sessionData;
 
-var activeBoot = true;
-var activeBuscar = false;
-
-
+let activeBot = true;
+let activeSearch = false;
 
 interface ResponseChat {
     message: string
@@ -112,19 +112,69 @@ async function listenMessage() {
         let message = body.toLowerCase();
 
         let step = await getMessages(message);
+
         if (step) {
-            console.log("entro step: ", step)
-            let response = await responseMessages(step);
-            console.log("responseMessages: ", response)
-            client.sendMessage(from, response.replyMessage);
+            if (step === keyChatBot.STEP_0) {
+                activeBot = false;
+            }
+            if (step === keyChatBot.STEP_1) {
+                activeBot = true;
+                activeSearch = false;
+            }
+            if (step === keyChatBot.SEARCH) {
+                activeSearch = true;
+            }
+
+
+            if (activeBot) {
+                await stepSendMessage(client, from, step);
+                return
+            }
+
         } else {
             console.log("entro sendMessaeDefault: ", step)
             sendMessaeDefault(client, from);
-           
         }
-
-
     });
+}
+
+async function stepSendMessage(client: any, from: string, step: string) {
+
+    let response = await responseMessages(step);
+    await client.sendMessage(from, response.replyMessage);
+    if (response.trigger && response.trigger === keyChatBot.PRODUCTS) {
+        await sendProducts(client, from);
+        return
+    }
+    return
+
+}
+function getSizeAndPrice(data: propertisModel[]): string {
+    let response = "";
+    if (data.length > 1) {
+        response = `*Precios*:\n${data.map(i => `*Tamaño*: ${i.size}, ${i.price} 💵💴💶\n`)}`
+    } else {
+        response = `${data.map(i => `${i.size}, ${i.price} 💵💴💶\n`)}`
+    }
+    return response
+}
+
+async function sendProducts(client: any, from: string, search?: string) {
+    let dataProducts = search ? await getProducts() : await getProducts();
+    await dataProducts.map(async item => {
+        let replyMessage: string = [`*Nombre*: ${item.data_name}🎒`, `${getSizeAndPrice(item.propertis)}`, `*Categoria*: ${item.category}`, `${item.description}`].join('\n');
+        const file = `${environment.urImg}/${item.img}`;
+        console.log("url Img: ", file);
+        if (fs.existsSync(file)) {
+            console.log("entro send Img: ", file);
+            const media = MessageMedia.fromFilePath(file);
+            await client.sendMessage(from, media, { sendAudioAsVoice: false });
+            await client.sendMessage(from, replyMessage);
+            return
+        }
+        return
+    })
+    return
 }
 
 async function getMessages(message: string) {
@@ -134,6 +184,7 @@ async function getMessages(message: string) {
     const response = key || null;
     return response
 }
+
 
 async function responseMessages(step: string) {
     let response = await getResponse(step);
@@ -154,7 +205,7 @@ async function sendMessaeDefault(client: any, from: string) {
 
 async function sendButtons(client: any, from: string) {
 
-    let buttons  = [
+    let buttons = [
         { "body": "Cursos" },
         { "body": "Youtube" },
         { "body": "Telegram" }
