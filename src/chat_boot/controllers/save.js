@@ -11,5 +11,12 @@ const saveMedia = async (media, path) => {
     await fs.writeFileSync(`${path}`, media.data, { encoding: 'base64' });
     return
 }
+const deleteMedia = async (path) => {
+    if(fs.existsSync(path)){
+        await fs.rmdirSync(path);
+        return
+    }
+    return
+}
 
-module.exports = {saveMedia}
+module.exports = {saveMedia,deleteMedia}

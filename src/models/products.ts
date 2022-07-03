@@ -8,6 +8,7 @@ export interface productsModel {
     description: string;
     propertis: propertisModel[];
     img: string;
+    active?: boolean;
 }
 export interface propertisModel {
     _id?: string

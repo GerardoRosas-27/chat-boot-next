@@ -9,5 +9,6 @@ export const environment ={
     DEFAULT_MESSAGE: true,
     url: "http://localhost:3000/",
     url_0: "https://chat-boot-next-production.up.railway.app/",
-    urImg:"./public/chat_boot"
+    urImg:"./public/chat_boot",
+    permissionsAdmin: ['5215568177478@c.us', '5217561223017@c.us']
 }

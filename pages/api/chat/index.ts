@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { environment } from '../../../src/environment/dev';
 const qrcode = require('qrcode-terminal');
-import { saveMedia } from "../../../src/chat_boot/controllers/save";
+import { deleteMedia, saveMedia } from "../../../src/chat_boot/controllers/save";
 const mimeDb = require('mime-db');
 const { Client, Buttons, MessageMedia } = require('whatsapp-web.js');
 require('dotenv').config()
@@ -11,8 +11,11 @@ import { connectionReady, connectionLost } from '../../../src/chat_boot/controll
 import { getInitials, getResponse, postResponse } from '../../../src/services/chatbot';
 import { responseMessageProduct, responseModel } from '../../../src/models/chatbot';
 import { keyChatBot } from '../../../src/environment/constan';
-import { getProduct, getProducts, getProductsQuery, postProduct, putProduct } from '../../../src/services/products';
+import { deleteProduct, getProduct, getProducts, getProductsQuery, postProduct, putProduct } from '../../../src/services/products';
 import { productsModel, propertisModel } from '../../../src/models/products';
+import { Console } from 'console';
+import { Message } from 'whatsapp-web.js';
+import { CustomMessage } from '../../../src/interfaces/customMessage';
 
 const MULTI_DEVICE = environment.MULTI_DEVICE;
 const SESSION_FILE_PATH = './session.json';
@@ -24,8 +27,10 @@ let activeBot = true;
 let activeSearch = false;
 let activeAdmin = false;
 let activeCreate = false;
+let activeDelete = false;
 let addFild = '';
 let productId = '';
+let captionData = '';
 
 interface ResponseChat {
     message: string
@@ -108,6 +113,7 @@ const withOutSession = () => {
 async function listenMessage() {
     client.on('message', async (msg: any) => {
         const { from, body, hasMedia } = msg;
+        console.log("from:", from);
         if (!isValidNumber(from)) {
             return
         }
@@ -129,19 +135,33 @@ async function listenMessage() {
                 activeSearch = false;
                 activeAdmin = false;
                 activeCreate = false;
+                activeDelete = false;
             }
             if (step === keyChatBot.SEARCH) {
                 activeSearch = true;
             }
             if (step === keyChatBot.ADMIN) {
-                activeAdmin = true;
+                if (getPermiseAdmin(from)) {
+                    activeAdmin = true;
+                }
                 activeSearch = false;
                 activeCreate = false;
             }
             if (step === keyChatBot.CREATE) {
-                activeAdmin = true;
+                if (getPermiseAdmin(from)) {
+                    activeAdmin = true;
+                    activeCreate = true;
+                    activeDelete = false;
+                }
                 activeSearch = false;
-                activeCreate = true
+            }
+            if (step === keyChatBot.DELETE) {
+                if (getPermiseAdmin(from)) {
+                    activeAdmin = true;
+                    activeCreate = false;
+                    activeDelete = true;
+                }
+                activeSearch = true;
             }
 
 
@@ -160,16 +180,30 @@ async function listenMessage() {
                     if (dataProducts && dataProducts.length > 0) {
                         await sendProducts(client, from, dataProducts);
                         await sendGeneralStep(client, from, keyChatBot.SEARCH)
+                        return
                     } else {
-                        await sendGeneralStep(client, from, keyChatBot.NOT_FONT)
+                        if (activeAdmin && msg.hasQuotedMsg) {
+                            console.log("activeAdmin search")
+                            await sendAdmin(hasMedia, msg, client, from);
+                            return
+                        } else {
+                            await sendGeneralStep(client, from, keyChatBot.NOT_FONT)
+                        }
+
+                        return
                     }
                 } else {
                     if (activeAdmin) {
+                        console.log("activeAdmin normal")
                         await sendAdmin(hasMedia, msg, client, from);
                         return
                     } else {
-                        await sendGeneralStep(client, from, keyChatBot.DEFAULT)
-                        await sendButtons(client, from)
+                        if (getPermiseAdmin(from)) {
+                            await sendGeneralStep(client, from, keyChatBot.NOT_ADMIN)
+                        } else {
+                            await sendGeneralStep(client, from, keyChatBot.DEFAULT)
+                        }
+
                     }
                 }
                 return
@@ -177,6 +211,16 @@ async function listenMessage() {
         }
     });
 }
+function getPermiseAdmin(from: string) {
+    let response = false;
+    let dataResponse = environment.permissionsAdmin.filter(item => item === from);
+    if (dataResponse && dataResponse.length > 0) {
+        response = true
+        console.log("user admin: ", dataResponse);
+    }
+    return response
+}
+
 function getSizeAndPriceSearch(data: propertisModel[], search: string) {
     let dataResponse: propertisModel[] = [];
     dataResponse = data.filter(item => item.size.toLowerCase().includes(search) || item.price.toString().includes(search));
@@ -198,6 +242,10 @@ async function stepSendMessage(client: any, from: string, step: string) {
         }
         return
     }
+    if (activeDelete && response.trigger && response.trigger === keyChatBot.SEARCH) {
+        await sendGeneralStep(client, from, keyChatBot.SEARCH);
+        return
+    }
     return
 
 }
@@ -213,12 +261,12 @@ function getSizeAndPrice(data: propertisModel[]): string {
 
 async function sendProducts(client: any, from: string, dataProducts: productsModel[]) {
     await dataProducts.map(async item => {
-        let replyMessage: string = [`*Nombre*: ${item.data_name}🎒`, `${getSizeAndPrice(item.propertis)}`, `*Categoria*: ${item.category}`, `${item.description}`].join('\n');
+        let replyMessage: string = [`${activeAdmin ? `${item._id}|` : ''}`, `*Nombre*: ${item.data_name}🎒`, `${getSizeAndPrice(item.propertis)}`, `*Categoria*: ${item.category}`, `${item.description}`, `${activeAdmin ? `img:${item.img}` : ''}`].join('\n');
         const file = `${environment.urImg}/${item.img}`;
         if (fs.existsSync(file)) {
             const media = MessageMedia.fromFilePath(file);
             await client.sendMessage(from, replyMessage, { sendAudioAsVoice: false, media: media });
-            
+
         }
     })
     return
@@ -245,9 +293,8 @@ async function responseMessages(step: string) {
 }
 
 
-async function sendAdmin(hasMedia: any, msg: any, client: any, from: string) {
-    console.log("save media msg: ", msg)
-    if (hasMedia) {
+async function sendAdmin(hasMedia: any, msg: CustomMessage, client: any, from: string) {
+    if (hasMedia && !msg.hasQuotedMsg) {
 
         try {
             const media = await msg.downloadMedia();
@@ -282,16 +329,19 @@ async function sendAdmin(hasMedia: any, msg: any, client: any, from: string) {
         }
 
     } else {
-        let message = msg.body
-        let id = ''
-        if (msg && msg.quotedMsg && msg.quotedMsg.body) {
-            id = msg.quotedMsg.body
-        } else {
-            id = productId
-        }
+
         try {
-            let responseGetProduct = await getProduct(id)
+
             if (activeCreate) {
+
+                let message = msg.body
+                let id = ''
+                if (msg && msg.quotedMsg && msg.quotedMsg.body) {
+                    id = msg.quotedMsg.body
+                } else {
+                    id = productId
+                }
+                let responseGetProduct = await getProduct(id)
                 if (addFild === keyChatBot.ADD_CATEGORY) {
                     if (message && message.length > 0) {
                         responseGetProduct.category = message
@@ -314,13 +364,33 @@ async function sendAdmin(hasMedia: any, msg: any, client: any, from: string) {
                 if (addFild === keyChatBot.ADD_SIZE_PRICE) {
                     if (message && message.length > 0) {
                         let messageDivider = message.split(',')
-                        responseGetProduct.propertis.push({ size: messageDivider[0], price: messageDivider[1] })
+                        responseGetProduct.propertis.push({ size: messageDivider[0], price: parseInt(messageDivider[1]) })
                     }
                     await putProduct(id, responseGetProduct)
                     addFild = keyChatBot.ADD_SIZE_PRICE
                     await sendGeneralStep(client, from, addFild)
                     return
                 }
+                return
+            }
+            if (activeDelete) {
+                console.log("entro delete: ", msg);
+                if (msg && msg.quotedMsg && msg.quotedMsg.caption) {
+                    captionData = msg.quotedMsg.caption
+                    console.log("entro = captionData: ", captionData);
+                    console.log("entro captionData: ", captionData);
+                    let indice = captionData.indexOf("|");
+                    let extraida = captionData.substring(0, indice);
+                    let indice1 = captionData.indexOf("img:");
+                    let extraida1 = captionData.substring(indice1, captionData.length - 1);
+                    console.log("Extraída: ", extraida);
+                    console.log("Extraída1: ", extraida1);
+                    await deleteProduct(extraida);
+                    await deleteMedia(extraida1);
+                    await sendGeneralStep(client, from, keyChatBot.SUSSEC_DELETE);
+                    return
+                }
+
                 return
             }
             return
@@ -351,7 +421,7 @@ async function sendButtons(client: any, from: string) {
     ]
 
     let button = new Buttons("mensaje bootones", [...buttons]);
-     await client.sendMessage(from, button);
+    await client.sendMessage(from, button);
     return
 }
 
