@@ -6,6 +6,7 @@ export const environment ={
     userBd: "",
     contraBD: "",
     MULTI_DEVICE: false,
+    DEFAULT_MESSAGE: true,
     url: "http://localhost:3000/",
     url_0: "https://chat-boot-next-production.up.railway.app/",
     urImg:"./public/chat_boot"

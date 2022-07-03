@@ -1,9 +1,13 @@
 import { initialModel, responseModel } from "../models/chatbot";
-import { createResponse, searchInitials, searchResponse, searchResponses } from "./bd.chatbot";
+import { createInitial, createResponse, searchInitials, searchResponse, searchResponses } from "./bd.chatbot";
 
 
 export async function postResponse(data: responseModel): Promise<responseModel> {
     let response = await createResponse(data);
+    return response
+}
+export async function postInitials(data: initialModel): Promise<initialModel> {
+    let response = await createInitial(data);
     return response
 }
 export async function getInitials(): Promise<initialModel[]> {

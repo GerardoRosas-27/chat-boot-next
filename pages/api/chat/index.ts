@@ -1,16 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { environment } from '../../../src/environment/dev';
 const qrcode = require('qrcode-terminal');
+import { saveMedia } from "../../../src/chat_boot/controllers/save";
+const mimeDb = require('mime-db');
 const { Client, Buttons, MessageMedia } = require('whatsapp-web.js');
 require('dotenv').config()
 const fs = require('fs');
 import { createClient, isValidNumber, generateImage } from '../../../src/chat_boot/controllers/handle';
 import { connectionReady, connectionLost } from '../../../src/chat_boot/controllers/connection'
-import { getInitials, getResponse } from '../../../src/services/chatbot';
+import { getInitials, getResponse, postResponse } from '../../../src/services/chatbot';
 import { responseMessageProduct, responseModel } from '../../../src/models/chatbot';
 import { keyChatBot } from '../../../src/environment/constan';
-import { getProducts } from '../../../src/services/products';
-import { propertisModel } from '../../../src/models/products';
+import { getProduct, getProducts, getProductsQuery, postProduct, putProduct } from '../../../src/services/products';
+import { productsModel, propertisModel } from '../../../src/models/products';
 
 const MULTI_DEVICE = environment.MULTI_DEVICE;
 const SESSION_FILE_PATH = './session.json';
@@ -20,6 +22,10 @@ let sessionData;
 
 let activeBot = true;
 let activeSearch = false;
+let activeAdmin = false;
+let activeCreate = false;
+let addFild = '';
+let productId = '';
 
 interface ResponseChat {
     message: string
@@ -101,7 +107,6 @@ const withOutSession = () => {
 
 async function listenMessage() {
     client.on('message', async (msg: any) => {
-        console.log('Body Message: ', msg.body);
         const { from, body, hasMedia } = msg;
         if (!isValidNumber(from)) {
             return
@@ -109,6 +114,8 @@ async function listenMessage() {
         if (from === 'status@broadcast') {
             return
         }
+
+
         let message = body.toLowerCase();
 
         let step = await getMessages(message);
@@ -120,9 +127,21 @@ async function listenMessage() {
             if (step === keyChatBot.STEP_1) {
                 activeBot = true;
                 activeSearch = false;
+                activeAdmin = false;
+                activeCreate = false;
             }
             if (step === keyChatBot.SEARCH) {
                 activeSearch = true;
+            }
+            if (step === keyChatBot.ADMIN) {
+                activeAdmin = true;
+                activeSearch = false;
+                activeCreate = false;
+            }
+            if (step === keyChatBot.CREATE) {
+                activeAdmin = true;
+                activeSearch = false;
+                activeCreate = true
             }
 
 
@@ -132,10 +151,40 @@ async function listenMessage() {
             }
 
         } else {
-            console.log("entro sendMessaeDefault: ", step)
-            sendMessaeDefault(client, from);
+            if (environment.DEFAULT_MESSAGE && activeBot) {
+
+                if (activeSearch) {
+                    let dataProducts = await getProducts();
+                    let search = message;
+                    dataProducts = await dataProducts.filter(item => item.data_name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search) || item.description.toLowerCase().includes(search) || getSizeAndPriceSearch(item.propertis, search))
+                    if (dataProducts && dataProducts.length > 0) {
+                        await sendProducts(client, from, dataProducts);
+                        await sendGeneralStep(client, from, keyChatBot.SEARCH)
+                    } else {
+                        await sendGeneralStep(client, from, keyChatBot.NOT_FONT)
+                    }
+                } else {
+                    if (activeAdmin) {
+                        await sendAdmin(hasMedia, msg, client, from);
+                        return
+                    } else {
+                        await sendGeneralStep(client, from, keyChatBot.DEFAULT)
+                        await sendButtons(client, from)
+                    }
+                }
+                return
+            }
         }
     });
+}
+function getSizeAndPriceSearch(data: propertisModel[], search: string) {
+    let dataResponse: propertisModel[] = [];
+    dataResponse = data.filter(item => item.size.toLowerCase().includes(search) || item.price.toString().includes(search));
+    if (dataResponse.length > 0) {
+        return true
+    } else {
+        return false
+    }
 }
 
 async function stepSendMessage(client: any, from: string, step: string) {
@@ -143,7 +192,10 @@ async function stepSendMessage(client: any, from: string, step: string) {
     let response = await responseMessages(step);
     await client.sendMessage(from, response.replyMessage);
     if (response.trigger && response.trigger === keyChatBot.PRODUCTS) {
-        await sendProducts(client, from);
+        let dataProducts = await getProducts()
+        if (dataProducts && dataProducts.length > 0) {
+            await sendProducts(client, from, dataProducts);
+        }
         return
     }
     return
@@ -152,34 +204,28 @@ async function stepSendMessage(client: any, from: string, step: string) {
 function getSizeAndPrice(data: propertisModel[]): string {
     let response = "";
     if (data.length > 1) {
-        response = `*Precios*:\n${data.map(i => `*Tamaño*: ${i.size}, ${i.price} 💵💴💶\n`)}`
+        response = `*Precios*:\n${data.map(i => `${i.size}, ${i.price} 💵💴💶\n`)}`
     } else {
         response = `${data.map(i => `${i.size}, ${i.price} 💵💴💶\n`)}`
     }
     return response
 }
 
-async function sendProducts(client: any, from: string, search?: string) {
-    let dataProducts = search ? await getProducts() : await getProducts();
+async function sendProducts(client: any, from: string, dataProducts: productsModel[]) {
     await dataProducts.map(async item => {
         let replyMessage: string = [`*Nombre*: ${item.data_name}🎒`, `${getSizeAndPrice(item.propertis)}`, `*Categoria*: ${item.category}`, `${item.description}`].join('\n');
         const file = `${environment.urImg}/${item.img}`;
-        console.log("url Img: ", file);
         if (fs.existsSync(file)) {
-            console.log("entro send Img: ", file);
             const media = MessageMedia.fromFilePath(file);
-            await client.sendMessage(from, media, { sendAudioAsVoice: false });
-            await client.sendMessage(from, replyMessage);
-            return
+            await client.sendMessage(from, replyMessage, { sendAudioAsVoice: false, media: media });
+            
         }
-        return
     })
     return
 }
 
 async function getMessages(message: string) {
     let stepsInitial = await getInitials();
-    console.log("searchs stepsInitial: ", stepsInitial);
     const { key } = stepsInitial.find(k => k.keywords.includes(message)) || { key: null }
     const response = key || null;
     return response
@@ -198,10 +244,103 @@ async function responseMessages(step: string) {
     return dataResponse
 }
 
-async function sendMessaeDefault(client: any, from: string) {
-    let response = await responseMessages(keyChatBot.DEFAULT);
-    client.sendMessage(from, response.replyMessage);
+
+async function sendAdmin(hasMedia: any, msg: any, client: any, from: string) {
+    console.log("save media msg: ", msg)
+    if (hasMedia) {
+
+        try {
+            const media = await msg.downloadMedia();
+            const extensionProcess = mimeDb[media.mimetype]
+            const ext = extensionProcess.extensions[0]
+            let name = msg.body.toLowerCase();
+            const fileSave = `${environment.urImg}/${name.split(' ').join('_')}.${ext}`;
+            const file = `${name.split(' ').join('_')}.${ext}`;
+            await saveMedia(media, fileSave);
+            let dataSave: productsModel = {
+                data_name: name,
+                category: '',
+                description: '',
+                propertis: [],
+                img: file
+            }
+            let dataResponse = await postProduct(dataSave);
+            if (dataResponse._id) {
+                productId = dataResponse._id
+                await client.sendMessage(from, dataResponse._id);
+                await sendGeneralStep(client, from, keyChatBot.ADD_CATEGORY);
+                addFild = keyChatBot.ADD_CATEGORY
+                return
+            } else {
+                await sendGeneralStep(client, from, keyChatBot.ERROR_SAVE);
+                return
+            }
+        } catch (error) {
+            console.log(error)
+            await sendGeneralStep(client, from, keyChatBot.ERROR_SAVE);
+            return
+        }
+
+    } else {
+        let message = msg.body
+        let id = ''
+        if (msg && msg.quotedMsg && msg.quotedMsg.body) {
+            id = msg.quotedMsg.body
+        } else {
+            id = productId
+        }
+        try {
+            let responseGetProduct = await getProduct(id)
+            if (activeCreate) {
+                if (addFild === keyChatBot.ADD_CATEGORY) {
+                    if (message && message.length > 0) {
+                        responseGetProduct.category = message
+                    }
+                    await putProduct(id, responseGetProduct)
+                    addFild = keyChatBot.ADD_DESCRIPTION
+                    await sendGeneralStep(client, from, addFild)
+                    return
+                }
+                if (addFild === keyChatBot.ADD_DESCRIPTION) {
+                    if (message && message.length > 0) {
+                        responseGetProduct.description = message
+                    }
+                    await putProduct(id, responseGetProduct)
+
+                    addFild = keyChatBot.ADD_SIZE_PRICE
+                    await sendGeneralStep(client, from, addFild)
+                    return
+                }
+                if (addFild === keyChatBot.ADD_SIZE_PRICE) {
+                    if (message && message.length > 0) {
+                        let messageDivider = message.split(',')
+                        responseGetProduct.propertis.push({ size: messageDivider[0], price: messageDivider[1] })
+                    }
+                    await putProduct(id, responseGetProduct)
+                    addFild = keyChatBot.ADD_SIZE_PRICE
+                    await sendGeneralStep(client, from, addFild)
+                    return
+                }
+                return
+            }
+            return
+        } catch (error) {
+            console.log(error)
+            await sendGeneralStep(client, from, keyChatBot.ERROR_SAVE);
+            return
+        }
+    }
 }
+
+async function sendGeneralStep(client: any, from: string, step: string) {
+    let response = await responseMessages(step);
+    await client.sendMessage(from, response.replyMessage);
+    return
+}
+
+
+
+
 
 async function sendButtons(client: any, from: string) {
 
@@ -211,10 +350,9 @@ async function sendButtons(client: any, from: string) {
         { "body": "Telegram" }
     ]
 
-    let button = new Buttons("mensaje bootones", [...buttons], "titulo B", "footer B");
-    let response = await client.sendMessage(from, button);
-    console.log("botton: ", response);
-
+    let button = new Buttons("mensaje bootones", [...buttons]);
+     await client.sendMessage(from, button);
+    return
 }
 
 

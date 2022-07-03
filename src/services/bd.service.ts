@@ -1,5 +1,5 @@
 import { connection } from "../bd/connection/bd";
-import { productsModel } from "../models/products";
+import { productsModel, propertisModel } from "../models/products";
 import { Products } from "../bd/schemas/products";
 import { HydratedDocument } from 'mongoose';
 
@@ -25,6 +25,26 @@ export async function searchProductByID(id: string) {
   connet.disconnect();
   console.log("searchProductByID: ", response);
   return response
+}
+export async function searchProductQuery(search: string) {
+  let connet = await connection();
+  search = search.toLowerCase();
+  let response = await Products.find({});
+
+  response = await response.filter(item => item.data_name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search) || item.description.toLowerCase().includes(search) || getSizeAndPrice(item.propertis, search))
+
+  connet.disconnect();
+  console.log("searchProductQuery: ", response);
+  return response
+}
+function getSizeAndPrice(data: propertisModel[], search: string) {
+  let dataResponse: propertisModel[] = [];
+  dataResponse = data.filter(item => item.size.toLowerCase().includes(search) || item.price.toString().includes(search));
+  if (dataResponse.length > 0) {
+    return true
+  } else {
+    return false
+  }
 }
 export async function removeProduct(id: string) {
   let connet = await connection();

@@ -1,5 +1,5 @@
 import { productsModel } from "../models/products";
-import { createProducts, searchProductByID, searchProducts, removeProduct, updateProduct } from "./bd.service";
+import { createProducts, searchProductByID, searchProducts, removeProduct, updateProduct, searchProductQuery } from "./bd.service";
 
 export async function postProduct(data: productsModel): Promise<productsModel> {
     let response = await createProducts(data);
@@ -14,6 +14,10 @@ export async function getProducts(): Promise<productsModel[]> {
 
 export async function getProduct(id: string): Promise<productsModel> {
     let response = await searchProductByID(id);
+    return response
+}
+export async function getProductsQuery(query: string): Promise<productsModel[]> {
+    let response = await searchProductQuery(query);
     return response
 }
 export async function deleteProduct(id: string): Promise<productsModel> {
