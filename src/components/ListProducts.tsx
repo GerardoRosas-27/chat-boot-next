@@ -35,11 +35,10 @@ const style = {
 };
 
 const ListProducts = (): JSX.Element => {
-
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
+    //useState modal
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [openDialogName, setOpenDialog] = React.useState<boolean | null>(null);
+   //useState table
     const [producList, setProductList] = useState<productsDTO[]>([]);
     const [selesctProduct, setSelesctProduct] = useState<productsDTO>({
         name: '',
@@ -48,10 +47,21 @@ const ListProducts = (): JSX.Element => {
         propertis: [],
         img: ''
     });
-    let product = selesctProduct
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+    //events modal
+    const handleClick = (event: any) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const closeDialog = () => {
+        setOpenDialog(null);
+    };
+
+   //events table
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
     };
@@ -63,7 +73,8 @@ const ListProducts = (): JSX.Element => {
     const onDetailProduct = (data: productsDTO) => {
         console.log("data: ", data);
         setSelesctProduct(data);
-        setOpen(true);
+        setOpenDialog(true);
+        handleClose();
     }
 
     useEffect(() => {
@@ -126,54 +137,8 @@ const ListProducts = (): JSX.Element => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                       Detalle del producto
-                    </Typography>
-                    <div className="row">
-                        <div className='c-p' style={classColumn('sm-1-6 lg-1-9')}>
-                            <div className="row">
-                                <div className='c-p' style={classColumn('md-1-6')}>
-                                    <p>Nombre</p>
-                                    <input type="text" value={product.name} />
-                                </div>
-                                <div className='c-p' style={classColumn('md-7-12')}>
-                                    <p>Descripción</p>
-                                    <textarea>{product.description}</textarea>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div className='c-p' style={classColumn('sm-7-12 lg-10-12')}>
-                            <p>{product.img}</p>
-                            <img src={'./chat_boot/' + product.img} alt="" />
-                        </div>
-
-
-                    </div>
-                    <style jsx>
-                        {`
-                          .c-p{
-                               padding: 5%;
-                            }
-                           .row textarea, .row input{
-                                    width: 100%;                
-                              }
-       
-                           img{
-                                 width: 100%;
-                               height: auto;
-                                }
-                       `}
-                    </style>
-                </Box>
-            </Modal>
+            <DetailProduct product={selesctProduct} open={openDialogName} onClose={closeDialog}></DetailProduct>
 
         </Paper>
     );
