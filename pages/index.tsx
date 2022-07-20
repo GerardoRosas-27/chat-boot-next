@@ -1,10 +1,11 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
+import { Login } from '@components/Login'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   return (
+    
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
@@ -12,21 +13,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-     <h1>Qr</h1>
-     <Image src="/chat_boot/qr-code.svg" alt="qr" width={1000} height={1000} />
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <Login></Login>
+      
     </div>
   )
 }
