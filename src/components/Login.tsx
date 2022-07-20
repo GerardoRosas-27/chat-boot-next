@@ -1,26 +1,41 @@
+import { productsDTO } from '@interfaces/products'
 import React from 'react'
-import styles from './../../styles/Home.module.css'
+import { classColumn, setColumnRow } from 'src/helperts/setColumn'
 
 export const Login = () => {
-  let col = 12
   return (
-    <div className={styles.row}>
-      <div className={styles.col_1_6}>
-        <div>
-          <div>
+    <div className="row">
+      <div style={classColumn('sm-1-6 lg-1-9')}>
+        <div className="row">
+          <div style={classColumn('md-1-6')}>
             <label htmlFor="">Usiario:</label>
             <input type="text" />
           </div>
-          <div >
+          <div style={classColumn('md-7-12')}>
             <label htmlFor="">Contraseña:</label>
             <input type="text" />
           </div>
         </div>
       </div>
+      <div style={classColumn('sm-7-12 lg-10-12')}>
+        <img src="./chat_boot/model-1.jpeg" alt="" />
+      </div>
 
-      <img className={styles.col_6_12} src="./chat_boot/model-1.jpeg" alt="" />
-
-
+      <style jsx>
+        {`
+        label {
+          margin: 0;
+          padding: 0;
+          font-size: 18px;
+          font-weight: 400;
+          line-height: 1.8;
+        }
+        img{
+          width: 100%;
+          height: auto;
+        }
+      `}
+      </style>
     </div>
   )
 }

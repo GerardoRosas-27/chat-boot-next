@@ -1,3 +1,5 @@
-export interface Column {
-    grid_column: string
+export interface ColumnSize {
+    col?: string
+    colStart: number,
+    colEnd: number
 }

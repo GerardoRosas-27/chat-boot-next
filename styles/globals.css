@@ -131,3 +131,14 @@ a {
     flex-direction: column;
   }
 }
+
+.row{
+  display: grid;
+  grid-template-columns: repeat(12, 8.3%);
+  grid-template-rows: auto;
+}
+.col-row{
+  display: grid;
+  grid-template-columns: repeat(12, 8.3%);
+  grid-template-rows: repeat(12, 8.3%);
+}

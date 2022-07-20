@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { routesApi } from "../environment/routesApi";
 import { productsDTO } from "../interfaces/products";
 import { responseGeneral } from "../interfaces/response";
+import { DetailProduct } from "./DetailProduct";
 
 
 const ListProducts = (): JSX.Element => {
@@ -24,7 +25,7 @@ const ListProducts = (): JSX.Element => {
         <>
             <h1>Hoa Mundo</h1>
             {producList.map((product) => (
-                <p>{product.name}</p>
+                <DetailProduct product={product}></DetailProduct>
             ))
             }
         </>
