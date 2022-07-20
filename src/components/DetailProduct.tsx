@@ -7,6 +7,7 @@ export const DetailProduct = (props: PropsProduct) => {
 
   const { product } = props;
   return (
+    
     <div className="row">
       <div className='c-p' style={classColumn('sm-1-6 lg-1-9')}>
         <div className="row">
