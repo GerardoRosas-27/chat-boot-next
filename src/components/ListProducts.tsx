@@ -13,32 +13,18 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
-//modal
+//new product
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { classColumn } from "src/helperts/setColumn";
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '90%',
-    height: '90%',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    overflowY: 'auto',
-    p: 4,
-};
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import Grid from '@mui/material/Grid';
 
 const ListProducts = (): JSX.Element => {
+    const [newProduct, setNewProduct] = React.useState(false);
     //useState modal
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [openDialogName, setOpenDialog] = React.useState<boolean | null>(null);
-   //useState table
+    const [openDialogName, setOpenDialog] = React.useState<boolean>();
+    //useState table
     const [producList, setProductList] = useState<productsDTO[]>([]);
     const [selesctProduct, setSelesctProduct] = useState<productsDTO>({
         name: '',
@@ -58,10 +44,10 @@ const ListProducts = (): JSX.Element => {
         setAnchorEl(null);
     };
     const closeDialog = () => {
-        setOpenDialog(null);
+        setOpenDialog(false);
     };
 
-   //events table
+    //events table
     const handleChangePage = (event: any, newPage: any) => {
         setPage(newPage);
     };
@@ -73,6 +59,21 @@ const ListProducts = (): JSX.Element => {
     const onDetailProduct = (data: productsDTO) => {
         console.log("data: ", data);
         setSelesctProduct(data);
+        setNewProduct(false);
+        setOpenDialog(true);
+        handleClose();
+    }
+
+    const onNewProduct = () => {
+        let data: productsDTO = {
+            name: "",
+            category: "",
+            description: "",
+            propertis: [],
+            img: ""
+        }
+        setSelesctProduct(data);
+        setNewProduct(true);
         setOpenDialog(true);
         handleClose();
     }
@@ -91,6 +92,15 @@ const ListProducts = (): JSX.Element => {
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+
+            <Grid container direction="row" spacing={2}>
+                <Grid item p={2} sm={6} md={7} lg={8} xl={9}>
+                    <Fab onClick={() => onNewProduct()} color="primary" aria-label="add">
+                        <AddIcon />
+                    </Fab>
+                </Grid>
+            </Grid>
+
             <TableContainer sx={{ maxHeight: 800 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -138,7 +148,7 @@ const ListProducts = (): JSX.Element => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
 
-            <DetailProduct product={selesctProduct} open={openDialogName} onClose={closeDialog}></DetailProduct>
+            <DetailProduct newProduct={newProduct} product={selesctProduct} open={openDialogName} onClose={closeDialog}></DetailProduct>
 
         </Paper>
     );

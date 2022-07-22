@@ -3,97 +3,90 @@ import React from 'react'
 import { classColumn, setColumnRow } from 'src/helperts/setColumn'
 import { PropsProduct, Props } from '@interfaces/Props';
 
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import Typography from '@mui/material/Typography';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '90%',
-  height: '90%',
-  overflowY: 'auto',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import { UploadImg } from './upload/UploadImg';
+
+const customWidth = {
+  width: '100%',
+  height: 'auto'
+}
 
 export const DetailProduct = (props: PropsProduct) => {
-  const { product, open, onClose } = props;
+  const { product, open, onClose, newProduct } = props;
 
-  const initial = () => {
-    console.log("open: ", open);
-    console.log("product: ", product);
-    console.log("onClose: ", onClose);
+  const listItems = (product: productsDTO) => {
+    return product.propertis.map(item => {
+      return (
+        <Grid container direction="row" key={item.id}>
+          <Grid item p={2} md={12}>
+            <TextField style={customWidth} value={item.size} id="standard-basic" label="Tamaño" variant="standard" />
+          </Grid>
+          <Grid item p={2} md={12}>
+            <TextField style={customWidth} value={item.price} id="standard-basic" label="Precio" variant="standard" />
+          </Grid>
+        </Grid>
+      )
+    })
   }
-  initial();
+
   return (
     <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+      <Dialog maxWidth={'lg'}
         open={open}
         onClose={onClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+        scroll={'paper'}
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
       >
-        <Fade in={open}>
-          <Box sx={style}>
-            <div className="row">
-              <div className='c-p' style={classColumn('sm-1-6 lg-1-9')}>
-                <div className="row">
-                  <div className='c-p' style={classColumn('md-1-6')}>
-                    <p>Nombre</p>
-                    <input type="text" value={product.name} />
-                  </div>
-                  <div className='c-p' style={classColumn('md-7-12')}>
-                    <p>Descripción</p>
-                    <textarea>{product.description}</textarea>
-                  </div>
-                </div>
-              </div>
+        <DialogTitle id="scroll-dialog-title">{newProduct ? 'Nuevo modelo' : 'Actualizar Modelo'}</DialogTitle>
+        <DialogContent dividers={true}>
+
+          <Grid container direction="row" spacing={2}>
+            <Grid item p={2} sm={6} md={7} lg={8} xl={9}>
+              <Grid container direction="row" spacing={1}>
+                <Grid item p={2} md={12}>
+                  <TextField style={customWidth} value={product.name} id="standard-basic" label="Nombre" variant="standard" />
+                </Grid>
+                <Grid item p={2} md={12}>
+                  <TextField style={customWidth} value={product.category} id="standard-basic" label="Cateoria" variant="standard" />
+                </Grid>
+                {listItems(product)}
+                <Grid item p={2} md={12}>
+                  <TextField style={customWidth}
+                    id="filled-multiline-static"
+                    label="Descripción"
+                    multiline
+                    rows={4}
+                    defaultValue={product.description}
+                    variant="filled"
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item p={2} sm={6} md={5} lg={4} xl={3}>
+              <p>{product.img}</p>
+              {
+                newProduct ? <UploadImg></UploadImg> : <img style={customWidth} src={'./chat_boot/' + product.img} alt="" />
+              }
+            </Grid>
+          </Grid>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={onClose}>Subscribe</Button>
+        </DialogActions>
+      </Dialog>
 
 
-
-              <div className='c-p' style={classColumn('sm-7-12 lg-10-12')}>
-                <p>{product.img}</p>
-                <img src={'./chat_boot/' + product.img} alt="" />
-              </div>
-
-              <style jsx>
-                {`
-        .c-p{
-          padding: 5%;
-        }
-        .row textarea, .row input{
-          width: 100%;
-          
-        }
-        label {
-          margin: 0;
-          padding: 0;
-          font-size: 18px;
-          font-weight: 400;
-          line-height: 1.8;
-        }
-        img{
-          width: 100%;
-          height: auto;
-        }
-      `}
-              </style>
-            </div>
-          </Box>
-        </Fade>
-      </Modal>
     </div>
 
   )

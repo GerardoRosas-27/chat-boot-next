@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { Navbar } from '../src/components/Navbar';
 export const Qr = (): JSX.Element => {
     return (
         <>

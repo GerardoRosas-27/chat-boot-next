@@ -1,0 +1,56 @@
+import React from 'react';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { UiFileInputButton } from './UiFileInputButton';
+import { uploadFileRequest } from '@services/upload.services';
+import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 10,
+  borderRadius: 5,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 5,
+    backgroundColor: theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8',
+  },
+}));
+
+const customWidth = {
+  width: '100%',
+  height: 'auto'
+}
+
+export const UploadImg = () => {
+  const [progress, setProgress] = React.useState(0);
+  const [imgDonwload, setImgDonwload] = React.useState<string>();
+  const onChange = async (formData: FormData) => {
+    setProgress(0);
+    setImgDonwload('');
+    const response = await uploadFileRequest(formData, (event) => {
+      let result = Math.round((event.loaded * 100) / event.total);
+      setProgress(result)
+      console.log(`Current progress:`, result);
+    });
+    if (response.error) {
+    } else {
+      setImgDonwload(response.data ? response.data[0] : '')
+    }
+    console.log('response: ', response);
+  };
+
+  return (
+    <div>
+      <Grid container direction="row" justifyContent="center" p={2}>
+        <UiFileInputButton label="Subir imagen" uploadFileName="theFiles" onChange={onChange} />
+      </Grid>
+
+      <Box sx={{ flexGrow: 1 }}>
+        <BorderLinearProgress variant="determinate" value={progress} />
+        <img style={customWidth} src={'./chat_boot/' + imgDonwload} alt="" />
+      </Box>
+    </div>
+  );
+};
