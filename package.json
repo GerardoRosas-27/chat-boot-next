@@ -21,6 +21,7 @@
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
     "https": "^1.0.0",
+    "isomorphic-unfetch": "^3.1.0",
     "mime-db": "^1.52.0",
     "mongoose": "^6.4.0",
     "multer": "^1.4.5-lts.1",

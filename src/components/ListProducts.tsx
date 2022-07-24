@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react"
-import { routesApi } from "../environment/routesApi";
 import { productsDTO } from "../interfaces/products";
-import { responseGeneral } from "../interfaces/response";
-import { DetailProduct } from "./DetailProduct";
+import { DataProps } from "@interfaces/Props";
+import { useRouter } from 'next/router'
 import * as React from 'react';
 //table
 import Paper from '@mui/material/Paper';
@@ -19,33 +17,13 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Grid from '@mui/material/Grid';
 
-const ListProducts = (): JSX.Element => {
-    const [newProduct, setNewProduct] = React.useState(false);
-    //useState modal
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [openDialogName, setOpenDialog] = React.useState<boolean>();
+
+const ListProducts = (props: DataProps<productsDTO[]> ): JSX.Element => {
+    const producList = props.data;
+    const router = useRouter()
     //useState table
-    const [producList, setProductList] = useState<productsDTO[]>([]);
-    const [selesctProduct, setSelesctProduct] = useState<productsDTO>({
-        name: '',
-        category: '',
-        description: '',
-        propertis: [],
-        img: ''
-    });
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-    //events modal
-    const handleClick = (event: any) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const closeDialog = () => {
-        setOpenDialog(false);
-    };
 
     //events table
     const handleChangePage = (event: any, newPage: any) => {
@@ -58,37 +36,15 @@ const ListProducts = (): JSX.Element => {
     };
     const onDetailProduct = (data: productsDTO) => {
         console.log("data: ", data);
-        setSelesctProduct(data);
-        setNewProduct(false);
-        setOpenDialog(true);
-        handleClose();
+        router.push({
+            pathname: '/product/[id]',
+            query: { id: data.id },
+        })
     }
 
     const onNewProduct = () => {
-        let data: productsDTO = {
-            name: "",
-            category: "",
-            description: "",
-            propertis: [],
-            img: ""
-        }
-        setSelesctProduct(data);
-        setNewProduct(true);
-        setOpenDialog(true);
-        handleClose();
+
     }
-
-    useEffect(() => {
-        window.
-            fetch(routesApi.product)
-            .then((response) => response.json())
-            .then((dataResponse: responseGeneral<productsDTO[]>) => {
-                console.log(dataResponse);
-
-                setProductList(dataResponse.body)
-            })
-    }, [])
-
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -147,8 +103,6 @@ const ListProducts = (): JSX.Element => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-
-            <DetailProduct newProduct={newProduct} product={selesctProduct} open={openDialogName} onClose={closeDialog}></DetailProduct>
 
         </Paper>
     );
