@@ -23,6 +23,16 @@ export const putProductService = async (id: string, data: productsDTO): Promise<
   return response.data;
 };
 
+export const deleteProductService = async (id: string): Promise<responseGeneral<productsDTO[]>> => {
+  const config: AxiosRequestConfig = {
+    headers: { 'content-type': 'application/json' },
+    validateStatus: (status) => true,
+  };
+  const response = await axios.delete(routesApi.product + '/' + id, config);
+
+  return response.data;
+};
+
 export const uploadFileRequest = async (
   formData: FormData,
   progressCallback?: (progressEvent: ProgressEvent) => void

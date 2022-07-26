@@ -26,34 +26,21 @@ const customWidth = {
 
 export const UploadImg = (props: PropsEvents<string, string>) => {
   const { data, event } = props;
-  console.log('data: ', data);
   const [progress, setProgress] = React.useState(0);
   const [imgDonwload, setImgDonwload] = React.useState<string>();
-  useEffect(() => {
-    return () => {
-      if (data) {
-        setImgDonwload(data);
-        console.log('data img: ', imgDonwload);
-      }
-    }
-  }, [])
 
-
-  console.log('imgDonwload: ', imgDonwload);
   const onChange = async (formData: FormData) => {
     setProgress(0);
     setImgDonwload('');
     const response = await uploadFileRequest(formData, (event) => {
       let result = Math.round((event.loaded * 100) / event.total);
       setProgress(result)
-      console.log(`Current progress:`, result);
     });
     if (response.error) {
     } else {
       setImgDonwload(response.data ? response.data[0] : '')
       event(response.data ? response.data[0] : '')
     }
-    console.log('response: ', response);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { productsDTO, propertisDTO } from "../../interfaces/products";
 import { DataProps } from "@interfaces/Props";
 import { useRouter } from 'next/router'
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 //table
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -11,20 +11,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
-//new product
+//icons acciones
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 import Grid from '@mui/material/Grid';
 import { AcctionProduct } from "src/environment/constan";
+import { deleteProductService, postProductService } from "@services/product.services";
 
 
 const ListProducts = (props: DataProps<productsDTO[]>): JSX.Element => {
-    const producList = props.data;
+    const { data } = props;
     const router = useRouter()
     //useState table
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [products, setProducts] = useState<productsDTO[]>([])
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    useEffect(() => {
+        setProducts(data)
+    }, [data])
+
 
     //events table
     const handleChangePage = (event: any, newPage: any) => {
@@ -42,6 +51,15 @@ const ListProducts = (props: DataProps<productsDTO[]>): JSX.Element => {
             query: { id: [AcctionProduct.UPDATE_PRODUCT, data.id ? data.id : ''] }
         })
     }
+
+
+    const onDeleteProduct = async (id: string) => {
+        const response = await deleteProductService(id);
+        if (response.staus == 200) {
+            let data = products.filter(item => item.id !== id);
+            setProducts(data);
+        }
+    };
 
     const onNewProduct = () => {
         router.push({
@@ -84,20 +102,30 @@ const ListProducts = (props: DataProps<productsDTO[]>): JSX.Element => {
                             <TableCell align="right">Categoria</TableCell>
                             <TableCell align="right">Precios</TableCell>
                             <TableCell align="right">Descripción</TableCell>
+                            <TableCell align="right">Acciones</TableCell>
                             <TableCell align="right">Imagen</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {producList
+                        {products
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row) => {
                                 return (
-                                    <TableRow onClick={() => onDetailProduct(row)} hover role="checkbox" tabIndex={-1} key={row.id}>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                         <TableCell component="th" scope="row">{row.name}
                                         </TableCell>
                                         <TableCell align="right">{row.category}</TableCell>
                                         <TableCell align="right">{PropertiComponent(row.propertis)}</TableCell>
                                         <TableCell align="right">{row.description}</TableCell>
+                                        <TableCell align="right">
+                                            < Fab onClick={() => onDetailProduct(row)} size="small" color="primary" aria-label="add">
+                                                <EditIcon></EditIcon>
+                                            </Fab>
+                                            < Fab onClick={() => onDeleteProduct(row.id as string)} size="small" color="secondary" aria-label="add">
+                                                <DeleteForeverIcon></DeleteForeverIcon>
+                                            </Fab>
+                                        </TableCell>
+
                                         <TableCell align="right"> <p>{row.img}</p><img src={'./chat_boot/' + row.img} alt="" /> </TableCell>
                                     </TableRow>
                                 );
@@ -116,7 +144,7 @@ const ListProducts = (props: DataProps<productsDTO[]>): JSX.Element => {
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25, 50, 100]}
                 component="div"
-                count={producList.length}
+                count={products.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

@@ -15,6 +15,7 @@ import { responseGeneral } from '@interfaces/response';
 import { useRouter } from 'next/router'
 import { postProductService, putProductService } from '@services/product.services';
 import Alert from '@mui/material/Alert';
+import { ListPropertis } from './ListPropertis';
 
 const customWidth = {
   width: '100%',
@@ -30,7 +31,7 @@ export const DetailProduct = (props: PropsProduct) => {
     name: '',
     category: '',
     description: '',
-    propertis: [{ id: '0', size: '', price: 0 }],
+    propertis: [],
     img: ''
   }
   const [updateId, setUpdateId] = useState<string>(product.id as string);
@@ -43,7 +44,10 @@ export const DetailProduct = (props: PropsProduct) => {
   const onNameChange = (e: any) => setName(e.target.value);
   const onCategoryChange = (e: any) => setCategory(e.target.value);
   const onDescriptionChange = (e: any) => setDescription(e.target.value);
-  const onPropertis = (data: propertisDTO[]) => setPropertis(data);
+  const addPropertis = (data: propertisDTO[]) => {
+    console.log("new propertis: ", data)
+    setPropertis(data);
+  }
   const onImgChange = (e: any) => setImg(e.target.value);
 
   useEffect(() => {
@@ -82,7 +86,7 @@ export const DetailProduct = (props: PropsProduct) => {
   const onGuardar = async () => {
     let data: productsDTO = {
       name, category, description, img,
-      propertis: [{ size: "Unico", price: 70 }]
+      propertis
     }
     if (newProduct) {
       const response = await postProductService(data);
@@ -93,6 +97,7 @@ export const DetailProduct = (props: PropsProduct) => {
         })
       }
     } else {
+      console.log("entro put: ", data)
       const response = await putProductService(updateId, data);
       if (response.staus == 200) {
         router.push({
@@ -103,20 +108,7 @@ export const DetailProduct = (props: PropsProduct) => {
 
   };
 
-  const listItems = (propertis: propertisDTO[]) => {
-    return propertis.map(item => {
-      return (
-        <Grid container direction="row" key={item.id}>
-          <Grid item p={2} md={12}>
-            <TextField style={customWidth} value={item.size} id="standard-basic" label="Tamaño" variant="standard" />
-          </Grid>
-          <Grid item p={2} md={12}>
-            <TextField style={customWidth} value={item.price} id="standard-basic" label="Precio" variant="standard" />
-          </Grid>
-        </Grid>
-      )
-    })
-  }
+
 
   return (
     <React.Fragment>
@@ -135,7 +127,9 @@ export const DetailProduct = (props: PropsProduct) => {
                 <TextField style={customWidth} value={category} onChange={onCategoryChange} id="standard-basic" label="Cateoria" variant="standard" />
               </Grid>
               <Grid item p={2} md={12}>
-                {listItems(propertis)}
+                {
+                  propertis ? <ListPropertis data={propertis.length > 0 ? propertis : []} addPropertis={addPropertis}></ListPropertis> : null
+                }
               </Grid>
               <Grid item p={2} md={12}>
                 <TextField style={customWidth}
