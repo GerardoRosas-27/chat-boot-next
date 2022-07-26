@@ -1,5 +1,5 @@
 import { productsDTO } from '@interfaces/products'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PropsProduct } from '@interfaces/Props';
 
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,6 +9,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { UploadImg } from './upload/UploadImg';
+import { routesApi } from 'src/environment/routesApi';
+import { responseGeneral } from '@interfaces/response';
 
 const customWidth = {
   width: '100%',
@@ -16,7 +18,32 @@ const customWidth = {
 }
 
 export const DetailProduct = (props: PropsProduct) => {
-  const { product, newProduct } = props;
+  const { id, newProduct } = props;
+
+
+  const productIni: productsDTO = {
+    name: '',
+    category: '',
+    description: '',
+    propertis: [{ id: '0', size: '', price: 0 }],
+    img: ''
+  }
+
+  const [product, setproduct] = useState<productsDTO>(productIni)
+  useEffect(() => {
+    if (id) {
+      const fetchData = async () => {
+        const response = await fetch(`${routesApi.product}/${id}`);
+        const data: responseGeneral<productsDTO[]> = await response.json()
+        setproduct(data.body[0])
+      }
+      fetchData().catch(erro => {
+        console.log("erro> ", erro)
+        setproduct(productIni)
+      })
+    }
+
+  }, [])
 
   const listItems = (product: productsDTO) => {
     return product.propertis.map(item => {

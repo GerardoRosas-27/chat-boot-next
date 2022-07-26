@@ -1,7 +1,7 @@
 import { productsDTO } from "./products";
 
 export interface PropsProduct{
-    product: productsDTO;
+    id: string;
     newProduct: boolean;
 }
 

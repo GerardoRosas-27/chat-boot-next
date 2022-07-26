@@ -2,7 +2,8 @@
 
 export const environment ={
     nameBd: "chat_boot",
-    urlBd: "mongodb://mongo:wY5KGYSms19oWyMAcDxX@containers-us-west-39.railway.app:7485",
+    urlBd: "mongodb://localhost/chat_boot",
+    urlBd0: "mongodb://mongo:wY5KGYSms19oWyMAcDxX@containers-us-west-39.railway.app:7485",
     userBd: "",
     contraBD: "",
     MULTI_DEVICE: false,
