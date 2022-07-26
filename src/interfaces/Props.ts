@@ -8,3 +8,14 @@ export interface PropsProduct{
 export interface DataProps<T>{
     data: T;
 }
+export interface PropsEvents<T,M>{
+    data: T;
+    event: (m:M) => void;
+}
+export interface Event<T>{
+    event: (t:T) => void;
+}
+
+export interface EventReturn<T,M>{
+    event: (t:T) => M;
+}

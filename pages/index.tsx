@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { DetailProduct } from '@components/DetailProduct'
+import { DetailProduct } from '@components/detailProduct/DetailProduct'
 import styles from '../styles/Home.module.css'
 import { Login } from '@components/Login'
 

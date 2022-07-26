@@ -1,4 +1,4 @@
-import { productsDTO } from "../interfaces/products";
+import { productsDTO, propertisDTO } from "../../interfaces/products";
 import { DataProps } from "@interfaces/Props";
 import { useRouter } from 'next/router'
 import * as React from 'react';
@@ -16,9 +16,10 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Grid from '@mui/material/Grid';
+import { AcctionProduct } from "src/environment/constan";
 
 
-const ListProducts = (props: DataProps<productsDTO[]> ): JSX.Element => {
+const ListProducts = (props: DataProps<productsDTO[]>): JSX.Element => {
     const producList = props.data;
     const router = useRouter()
     //useState table
@@ -37,20 +38,38 @@ const ListProducts = (props: DataProps<productsDTO[]> ): JSX.Element => {
     const onDetailProduct = (data: productsDTO) => {
         console.log("data: ", data);
         router.push({
-            pathname: '/product/[id]',
-            query: { id: data.id },
+            pathname: '/product/[...id]',
+            query: { id: [AcctionProduct.UPDATE_PRODUCT, data.id ? data.id : ''] }
         })
     }
 
     const onNewProduct = () => {
+        router.push({
+            pathname: '/product/[...id]',
+            query: { id: [AcctionProduct.NEW_PRODUCT, '0'] }
+        })
+    }
+
+    const PropertiComponent = (data: propertisDTO[]) => {
+        return data.map(item => {
+            return (
+                <p key={item.id}>
+                    <strong>
+                        {item.size}:&nbsp;
+                    </strong>
+                    {item.price}
+                </p>
+            )
+        })
 
     }
+
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
 
-            <Grid container direction="row" spacing={2}>
-                <Grid item p={2} sm={6} md={7} lg={8} xl={9}>
+            <Grid container direction="row" justifyContent="flex-end" spacing={2}>
+                <Grid item p={2} md={1} sm={2}>
                     <Fab onClick={() => onNewProduct()} color="primary" aria-label="add">
                         <AddIcon />
                     </Fab>
@@ -61,11 +80,11 @@ const ListProducts = (props: DataProps<productsDTO[]> ): JSX.Element => {
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Dessert (100g serving)</TableCell>
-                            <TableCell align="right">Calories</TableCell>
-                            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                            <TableCell align="right">Nombre</TableCell>
+                            <TableCell align="right">Categoria</TableCell>
+                            <TableCell align="right">Precios</TableCell>
+                            <TableCell align="right">Descripción</TableCell>
+                            <TableCell align="right">Imagen</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -76,10 +95,10 @@ const ListProducts = (props: DataProps<productsDTO[]> ): JSX.Element => {
                                     <TableRow onClick={() => onDetailProduct(row)} hover role="checkbox" tabIndex={-1} key={row.id}>
                                         <TableCell component="th" scope="row">{row.name}
                                         </TableCell>
-                                        <TableCell align="right">{row.name}</TableCell>
+                                        <TableCell align="right">{row.category}</TableCell>
+                                        <TableCell align="right">{PropertiComponent(row.propertis)}</TableCell>
                                         <TableCell align="right">{row.description}</TableCell>
-                                        <TableCell align="right">{row.img}</TableCell>
-                                        <TableCell align="right"> <img src={'./chat_boot/' + row.img} alt="" /> </TableCell>
+                                        <TableCell align="right"> <p>{row.img}</p><img src={'./chat_boot/' + row.img} alt="" /> </TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -88,7 +107,7 @@ const ListProducts = (props: DataProps<productsDTO[]> ): JSX.Element => {
                 <style jsx>
                     {`
                 img{
-                 width: 20%;
+                 width: 30%;
                  height: auto;
                 }
             `}

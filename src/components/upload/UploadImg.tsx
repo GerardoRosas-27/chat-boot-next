@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { FormEvent, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { UiFileInputButton } from './UiFileInputButton';
-import { uploadFileRequest } from '@services/upload.services';
+import { uploadFileRequest } from '@services/product.services';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import { EventReturn, PropsEvents } from '@interfaces/Props';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -23,9 +24,22 @@ const customWidth = {
   height: 'auto'
 }
 
-export const UploadImg = () => {
+export const UploadImg = (props: PropsEvents<string, string>) => {
+  const { data, event } = props;
+  console.log('data: ', data);
   const [progress, setProgress] = React.useState(0);
   const [imgDonwload, setImgDonwload] = React.useState<string>();
+  useEffect(() => {
+    return () => {
+      if (data) {
+        setImgDonwload(data);
+        console.log('data img: ', imgDonwload);
+      }
+    }
+  }, [])
+
+
+  console.log('imgDonwload: ', imgDonwload);
   const onChange = async (formData: FormData) => {
     setProgress(0);
     setImgDonwload('');
@@ -37,6 +51,7 @@ export const UploadImg = () => {
     if (response.error) {
     } else {
       setImgDonwload(response.data ? response.data[0] : '')
+      event(response.data ? response.data[0] : '')
     }
     console.log('response: ', response);
   };
@@ -49,7 +64,8 @@ export const UploadImg = () => {
 
       <Box sx={{ flexGrow: 1 }}>
         <BorderLinearProgress variant="determinate" value={progress} />
-        <img style={customWidth} src={'./chat_boot/' + imgDonwload} alt="" />
+        <img style={customWidth} src={'../../chat_boot/' + (progress == 0 ? data : imgDonwload)} alt="" />
+
       </Box>
     </div>
   );
