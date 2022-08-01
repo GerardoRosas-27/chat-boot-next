@@ -18,3 +18,7 @@ export const keyChatBot = {
     NOT_ADMIN: "NOT_ADMIN",
     SUSSEC_DELETE: "SUSSEC_DELETE"
 }
+export const AcctionProduct = {
+    NEW_PRODUCT: 'nuevo',
+    UPDATE_PRODUCT: 'editar'
+}
