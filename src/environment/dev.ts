@@ -2,14 +2,14 @@
 
 export const environment ={
     nameBd: "chat_boot",
-    urlBd: "mongodb://localhost/chat_boot",
-    urlBd0: "mongodb://mongo:wY5KGYSms19oWyMAcDxX@containers-us-west-39.railway.app:7485",
+    urlBd_0: "mongodb://localhost/chat_boot",
+    urlBd: "mongodb://mongo:VUVeqyEAElZVW3DmexqU@containers-us-west-39.railway.app:7485",
     userBd: "",
     contraBD: "",
     MULTI_DEVICE: false,
     DEFAULT_MESSAGE: true,
-    url: "http://localhost:3000/",
-    url_0: "https://chat-boot-next-production.up.railway.app/",
+    url_0: "http://localhost:3000/",
+    url: "https://chat-boot-next-production.up.railway.app/",
     urImg:"./public/chat_boot",
     permissionsAdmin: ['5215568177478@c.us', '5217561223017@c.us']
 }
