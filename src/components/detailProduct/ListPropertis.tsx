@@ -73,14 +73,14 @@ export const ListPropertis = (props: PropsPropertis<propertisDTO[], propertisDTO
     return (
         <>
             <Grid container direction="row">
-                <Grid item md={6}>
+                <Grid item xs={6}>
                     <Grid container direction="row" justifyContent="flex-start">
                         <Fab onClick={() => onAdd()} size="small" color="primary" aria-label="add">
                             <AddIcon />
                         </Fab>
                     </Grid>
                 </Grid>
-                <Grid item md={6}>
+                <Grid item xs={6}>
                     <Grid container direction="row" justifyContent="flex-end">
                         {propertis.length > 0 ?
                             < Fab onClick={() => edit ? setEdit(false) : onSend()} size="small" color="primary" aria-label="add">
@@ -95,13 +95,13 @@ export const ListPropertis = (props: PropsPropertis<propertisDTO[], propertisDTO
                     return (
 
                         <Grid container direction="row" key={item.id}>
-                            <Grid item p={2} md={5}>
+                            <Grid item p={2} xs={5}>
                                 <TextField disabled={edit} value={item.size} onChange={(e) => onChangeSize(e, item)} style={customWidth} id="standard-basic" label="Tamaño" variant="standard" />
                             </Grid>
-                            <Grid item p={2} md={5}>
+                            <Grid item p={2} xs={5}>
                                 <TextField disabled={edit} value={item.price} onChange={(e) => onChangePrice(e, item)} style={customWidth} id="standard-basic" label="Precio" variant="standard" />
                             </Grid>
-                            <Grid item p={2} md={2}>
+                            <Grid item p={2} xs={2}>
 
                                 {!edit ? <Fab onClick={() => onClear(item)} size="small" color="secondary" aria-label="add">
                                     <ClearIcon></ClearIcon>
