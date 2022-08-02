@@ -115,23 +115,23 @@ export const DetailProduct = (props: PropsProduct) => {
       <CssBaseline />
       <Container maxWidth="md">
         <Grid container direction="row" spacing={2}>
-          <Grid item p={2} sm={6} md={7} lg={8} xl={9}>
+          <Grid item p={2} xs={12} sm={6} md={7} lg={8} xl={9}>
             <Grid container direction="row" spacing={1}>
-              <Grid item p={2} md={12}>
+              <Grid item p={2} xs={12}>
                 <Item>
                   <TextField style={customWidth} value={name} onChange={onNameChange} id="outlined-basic" label="Nombre" variant="standard" />
 
                 </Item>
               </Grid>
-              <Grid item p={2} md={12}>
+              <Grid item p={2} xs={12}>
                 <TextField style={customWidth} value={category} onChange={onCategoryChange} id="standard-basic" label="Cateoria" variant="standard" />
               </Grid>
-              <Grid item p={2} md={12}>
+              <Grid item p={2} xs={12}>
                 {
                   propertis ? <ListPropertis data={propertis.length > 0 ? propertis : []} addPropertis={addPropertis}></ListPropertis> : null
                 }
               </Grid>
-              <Grid item p={2} md={12}>
+              <Grid item p={2} xs={12}>
                 <TextField style={customWidth}
                   id="filled-multiline-static"
                   label="Descripción"
@@ -143,7 +143,7 @@ export const DetailProduct = (props: PropsProduct) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item p={2} sm={6} md={5} lg={4} xl={3}>
+          <Grid item p={2} xs={12} sm={6} md={5} lg={4} xl={3}>
             <p>{img}</p>
             {
               <UploadImg data={img} event={onAddImg}></UploadImg>
