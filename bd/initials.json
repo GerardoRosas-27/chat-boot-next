@@ -1,0 +1,121 @@
+[{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8912"
+  },
+  "keywords": [
+    "0",
+    "hola",
+    "hola!",
+    "ola",
+    "ole",
+    "inicio",
+    "welcome",
+    "buenos días",
+    "buenas tardes",
+    "buenas noches",
+    "me dieron este número",
+    "venden a crédito",
+    "quisiera saber si venden",
+    "necesito saber"
+  ],
+  "key": "STEP_1"
+},{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8913"
+  },
+  "keywords": [
+    "1",
+    "catalogo",
+    "catálogo",
+    "catalogos",
+    "catálogos",
+    "fotos",
+    "imagenes"
+  ],
+  "key": "STEP_2"
+},{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8914"
+  },
+  "keywords": [
+    "2",
+    "mensaje normal",
+    "normal",
+    "Sin boot"
+  ],
+  "key": "STEP_0"
+},{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8915"
+  },
+  "keywords": [
+    "3",
+    "Si",
+    "si"
+  ],
+  "key": "STEP_2_1"
+},{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8916"
+  },
+  "keywords": [
+    "4",
+    "No",
+    "no"
+  ],
+  "key": "STEP_0"
+},{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8917"
+  },
+  "keywords": [
+    "5",
+    "buscar",
+    "5.-Buscar"
+  ],
+  "key": "SEARCH"
+},{
+  "_id": {
+    "$oid": "62b8fb531031a3fca7fd8918"
+  },
+  "keywords": [
+    "6",
+    "salir",
+    "terminar",
+    "6.-Salir"
+  ],
+  "key": "STEP_1"
+},{
+  "_id": {
+    "$oid": "62c1161a186c19b92bd8b21d"
+  },
+  "keywords": [
+    "7",
+    "admin",
+    "7.-admin"
+  ],
+  "key": "ADMIN",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c1164a186c19b92bd8b21f"
+  },
+  "keywords": [
+    "8",
+    "crear",
+    "8.-Crear"
+  ],
+  "key": "CREATE",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c14c139682103169b9dc76"
+  },
+  "keywords": [
+    "10",
+    "eliminar",
+    "10.-Eliminar"
+  ],
+  "key": "DELETE",
+  "__v": 0
+}]

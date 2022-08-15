@@ -1,0 +1,385 @@
+[{
+  "_id": {
+    "$oid": "62e73ca257d9636614a7977c"
+  },
+  "data_name": "05 sencilla",
+  "category": "Chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 60,
+      "_id": {
+        "$oid": "62e73ca257d9636614a7977d"
+      }
+    }
+  ],
+  "img": "model-10.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73cf357d9636614a79781"
+  },
+  "data_name": "05 niña",
+  "category": "chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 70,
+      "_id": {
+        "$oid": "62e73cf357d9636614a79782"
+      }
+    }
+  ],
+  "img": "model-11.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73d3b57d9636614a79786"
+  },
+  "data_name": "Puma",
+  "category": "Chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 135,
+      "_id": {
+        "$oid": "62e73d3b57d9636614a79787"
+      }
+    }
+  ],
+  "img": "model-12.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73d6657d9636614a7978b"
+  },
+  "data_name": "Lentejuela",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 140,
+      "_id": {
+        "$oid": "62e73d6657d9636614a7978c"
+      }
+    }
+  ],
+  "img": "model-13.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73d9057d9636614a79790"
+  },
+  "data_name": "Portafolio Niña",
+  "category": "Chilapa",
+  "description": "de mezclilla",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 80,
+      "_id": {
+        "$oid": "62e7415a57d9636614a797e4"
+      }
+    }
+  ],
+  "img": "model-14.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73dbd57d9636614a79795"
+  },
+  "data_name": "Portafolio",
+  "category": "Chilapa",
+  "description": "de mezclilla",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 70,
+      "_id": {
+        "$oid": "62e7416a57d9636614a797ea"
+      }
+    }
+  ],
+  "img": "model-15.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73e0157d9636614a7979a"
+  },
+  "data_name": "Jp Sport",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 130,
+      "_id": {
+        "$oid": "62e73e0157d9636614a7979b"
+      }
+    }
+  ],
+  "img": "model-16.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73e2857d9636614a7979f"
+  },
+  "data_name": "Trinitron",
+  "category": "Chilapa",
+  "description": "de mezclilla",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 130,
+      "_id": {
+        "$oid": "62e7414857d9636614a797de"
+      }
+    }
+  ],
+  "img": "model-17.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73e8c57d9636614a797a4"
+  },
+  "data_name": "Donghao",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 130,
+      "_id": {
+        "$oid": "62e73e8c57d9636614a797a5"
+      }
+    }
+  ],
+  "img": "model-18.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73eaf57d9636614a797a9"
+  },
+  "data_name": "Diamante sencilla",
+  "category": "Chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 42,
+      "_id": {
+        "$oid": "62e73eaf57d9636614a797aa"
+      }
+    }
+  ],
+  "img": "model-19.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73f0057d9636614a797ae"
+  },
+  "data_name": "Maleta doble",
+  "category": "Chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Chica",
+      "price": 151,
+      "_id": {
+        "$oid": "62e73f0057d9636614a797af"
+      }
+    },
+    {
+      "size": "Mediana",
+      "price": 161,
+      "_id": {
+        "$oid": "62e73f0057d9636614a797b0"
+      }
+    },
+    {
+      "size": "Grande",
+      "price": 171,
+      "_id": {
+        "$oid": "62e73f0057d9636614a797b1"
+      }
+    },
+    {
+      "size": "Extra",
+      "price": 181,
+      "_id": {
+        "$oid": "62e73f0057d9636614a797b2"
+      }
+    }
+  ],
+  "img": "model-20.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73f6d57d9636614a797b6"
+  },
+  "data_name": "Sapo doble",
+  "category": "Chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Chica",
+      "price": 90,
+      "_id": {
+        "$oid": "62e73f6d57d9636614a797b7"
+      }
+    },
+    {
+      "size": "Mediana",
+      "price": 100,
+      "_id": {
+        "$oid": "62e73f6d57d9636614a797b8"
+      }
+    },
+    {
+      "size": "Grande",
+      "price": 123,
+      "_id": {
+        "$oid": "62e73f6d57d9636614a797b9"
+      }
+    },
+    {
+      "size": "Extra",
+      "price": 150,
+      "_id": {
+        "$oid": "62e73f6d57d9636614a797ba"
+      }
+    }
+  ],
+  "img": "model-21.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73f9457d9636614a797be"
+  },
+  "data_name": "Carros",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 100,
+      "_id": {
+        "$oid": "62e73f9457d9636614a797bf"
+      }
+    }
+  ],
+  "img": "model-22.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e73fdf57d9636614a797c3"
+  },
+  "data_name": "Mariposas",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 100,
+      "_id": {
+        "$oid": "62e73fdf57d9636614a797c4"
+      }
+    }
+  ],
+  "img": "model-23.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e7400357d9636614a797c8"
+  },
+  "data_name": "Flores",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 110,
+      "_id": {
+        "$oid": "62e7400357d9636614a797c9"
+      }
+    }
+  ],
+  "img": "model-24.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e7406657d9636614a797cd"
+  },
+  "data_name": "Modelo 25",
+  "category": "China 🇨🇳",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 105,
+      "_id": {
+        "$oid": "62e7406657d9636614a797ce"
+      }
+    }
+  ],
+  "img": "model-25.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e7409c57d9636614a797d2"
+  },
+  "data_name": "Ben 10",
+  "category": "China",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 140,
+      "_id": {
+        "$oid": "62e7409c57d9636614a797d3"
+      }
+    }
+  ],
+  "img": "model-26.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e7410857d9636614a797d7"
+  },
+  "data_name": "Pinocho",
+  "category": "Chilapa",
+  "description": "de mezclilla",
+  "propertis": [
+    {
+      "size": "Mediana",
+      "price": 40,
+      "_id": {
+        "$oid": "62e7418357d9636614a797f0"
+      }
+    }
+  ],
+  "img": "pinocho.jpeg",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62e95998c936883b3b976594"
+  },
+  "data_name": "Prueba",
+  "category": "Chilapa",
+  "description": "",
+  "propertis": [
+    {
+      "size": "Normal",
+      "price": 60,
+      "_id": {
+        "$oid": "62e95c48c936883b3b9765a0"
+      }
+    }
+  ],
+  "img": "prueba1.jpg",
+  "__v": 0
+}]

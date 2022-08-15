@@ -1,0 +1,186 @@
+[{
+  "_id": {
+    "$oid": "62b903321031a3fca7fd892f"
+  },
+  "key": "DEFAULT",
+  "replyMessage": [
+    "*Esta respuesta es una respuesta default* cuando no se consigue una palabra clave \n",
+    "Prueba escribiendo *hola* \n"
+  ],
+  "media": null,
+  "trigger": null
+},{
+  "_id": {
+    "$oid": "62b903321031a3fca7fd8930"
+  },
+  "key": "SEARCH",
+  "replyMessage": [
+    "*Puedes buscar por(modelo, precio, tamaño)* \n",
+    "*Escribe tu busqueda* \n",
+    "\n*6.-Salir 📸*"
+  ],
+  "media": null,
+  "trigger": null
+},{
+  "_id": {
+    "$oid": "62b903321031a3fca7fd8931"
+  },
+  "key": "NOT_FONT",
+  "replyMessage": [
+    "*No se encontrarón resultados* 😥 \n",
+    "*Puedes buscar por(modelo, precio, tamaño)* \n",
+    "\n*6.-Salir 📸*"
+  ],
+  "media": null,
+  "trigger": null
+},{
+  "_id": {
+    "$oid": "62b903321031a3fca7fd8932"
+  },
+  "key": "UPDATE_STEP_2",
+  "replyMessage": [
+    "*Catálogo enviado...* \n",
+    "*¿Quieres recibir lo de nuevo? * \n",
+    "\n*3.-Si 📸*",
+    "\n*4.-No*"
+  ],
+  "media": null,
+  "trigger": null
+},{
+  "_id": {
+    "$oid": "62b903321031a3fca7fd8933"
+  },
+  "key": "STEP_0",
+  "replyMessage": [
+    "El flujo ha finalizado \n",
+    "Para activar o iniciar el CHATBOT 🤖 puede volver a escribir \n",
+    "0, hola o inicio. \n",
+    "Gracias por usar CHATBOT 🤖 de Whatsapp \n"
+  ],
+  "media": null,
+  "trigger": null
+},{
+  "_id": {
+    "$oid": "62b903321031a3fca7fd8935"
+  },
+  "key": "STEP_2",
+  "replyMessage": [
+    "Perfecto, te voy a pasar las fotos 🙂🤖"
+  ],
+  "media": null,
+  "trigger": "PRODUCTS"
+},{
+  "_id": {
+    "$oid": "62c1036b1526bbc093874ed0"
+  },
+  "key": "STEP_1",
+  "replyMessage": [
+    "Hola! y✌️ Bienvenido a este 🤖 CHATBOT de Whatsapp, \n",
+    "*Menu de opciones:*📒  \n",
+    "\n*1.-Catalogo 📸*",
+    "\n*2.-Sin boot*",
+    "\n*5.-Buscar 🔍*",
+    "\n*7.-Admin 📁📙*"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c109551526bbc093874ede"
+  },
+  "key": "ADMIN",
+  "replyMessage": [
+    "*Menu de opciones:*📒  \n",
+    "\n*8.-Crear 📸*",
+    "\n*9.-Editar 📝*",
+    "\n*10.-Eliminar ❌*"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c10b8c1526bbc093874ee0"
+  },
+  "key": "ADD_CATEGORY",
+  "replyMessage": [
+    "*Escribe la categoria:*📝 \n"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c10bb51526bbc093874ee2"
+  },
+  "key": "ADD_DESCRIPTION",
+  "replyMessage": [
+    "*Escribe la descripción:*📝 \n"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c10d951526bbc093874ee4"
+  },
+  "key": "ADD_SIZE_PRICE",
+  "replyMessage": [
+    "*Escribe el tamaño y precio:*📝 \n",
+    "*formato: tamaño, precio:* \n",
+    "*6.-Salir 📸*"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c115c9186c19b92bd8b21b"
+  },
+  "key": "CREATE",
+  "replyMessage": [
+    "*Para agregar un nuevo modelo*\n",
+    "*Envia una foto 📸*\n",
+    "*Y adjunta el nombre del modelo:*📝 \n"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c11f96186c19b92bd8b236"
+  },
+  "key": "ERROR_SAVE",
+  "replyMessage": [
+    "*❗☢️ Error al procesar los datos 🎒 *\n",
+    "*Intentalo de nuevo*\n"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c14ccc9682103169b9dc78"
+  },
+  "key": "DELETE",
+  "replyMessage": [
+    "*Para eliminar un modelo, buscarlo y reenviarlo 🎒 *\n"
+  ],
+  "media": null,
+  "trigger": "SEARCH",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "62c15b4c1df6b4c3ce797bb6"
+  },
+  "key": "SUSSEC_DELETE",
+  "replyMessage": [
+    "*✅Se elimino correctamente 🎒 *\n",
+    "*Puedes continuar eliminando❌*\n",
+    "*6.-Salir📒*\n"
+  ],
+  "media": null,
+  "trigger": null,
+  "__v": 0
+}]
